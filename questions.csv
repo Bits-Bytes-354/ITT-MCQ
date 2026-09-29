@@ -250,7 +250,7 @@ text data into Access?",.docx,.xlsx,.txt or .csv,.pdf,C
 54,When to use Pivot Tables,"For Large Data
 sets","Exploratory
 Analysis",Reporting,All,D
-55,�are interactive visual filters.,Slicers,Solver,Flash fill,Drill Down,A
+55,_____________ are interactive visual filters.,Slicers,Solver,Flash fill,Drill Down,A
 56,When did the concept of Pivot Tables first emerge?,1960s,1970s,1980s,1990s,C
 57,What is the purpose of refreshing a Pivot Table?,"To change its
 formatting","To update it
@@ -427,7 +427,7 @@ address, and
 PAN
 (Permanent
 Account
-Number)","Driver�s
+Number)","Driver's
 license
 and vehicle
 registration
@@ -480,7 +480,7 @@ n","www.india.gov
 .i
 n/gst","www.gstregis
 tration.in",B
-98,What does �PPOB� stand for in GST registration?,"Principal Place
+98,What does 'PPOB' stand for in GST registration?,"Principal Place
 of
 Business","Primary Point
 of
@@ -489,8 +489,8 @@ Place of
 Business","Personal
 Place of
 Business.",A
-99,"What is the purpose of the HSN or SAC codes in the �Goods and
-Services� section?","To verify the
+99,"What is the purpose of the HSN or SAC codes in the 'Goods and
+Services' section?","To verify the
 business","To calculate
 taxes","To classify
 products and
@@ -639,7 +639,7 @@ Focus",C
 code","By setting
 properties in
 the
-form�s controls","By using
+form's controls","By using
 validation rules","All of the
 above",D
 118,"Which form property is used to restrict the types of data a user
@@ -648,7 +648,7 @@ Source",A
 119,What is a report in MS Access used for?,Data input,Data analysis,"Data
 presentation",Data deletion,C
 120,Which section of a report repeats for each record?,Report Header,Page Header,Detail,Page Footer,C
-121,What does a report�s Detail section display?,"Summary of
+121,What does a report's Detail section display?,"Summary of
 data","Individual
 records",Report title,Page number,B
 122,"Which financial function in Excel calculates the future value of an
@@ -740,7 +740,7 @@ that meet criteria, making key insights easily discernible.","Conditional
 Formatting",Formatting,AutoFill,Flash Fill,A
 138,Which tab contains the feature 'Conditional Formatting'?,Data Tab only,Home Tab only,Both A & B,None,B
 139,"Which of the following should you use if you want all the slide in
-the presentation to have the same �look�?","The slide
+the presentation to have the same 'look'?","The slide
 layout
 option","Add a slide
 option",Outline view,"A
@@ -761,7 +761,7 @@ PowerPoint?",Themes,Background,Page Setup,Page Layout,C
 143,"How the information is arranged on the slide is controlled by
 _____ in PowerPoint?",Slide layouts,Background,Themes,Slide Master,A
 144,"The presentation inherits various design elements as well as
-prewritten content that�s stored in the template called _____.",Background,Slide layouts,Themes,Effects,C
+prewritten content that's stored in the template called _____.",Background,Slide layouts,Themes,Effects,C
 145,Slide layout option available in ____ group of Home tab in Ms-PowePoint.,Slides,Font,Editing,Clipboard,A
 146,"The Powerpoint presentation can be saved using the shortcut
 key.",Ctrl+S,Shift+F12,Both A & B,Ctrl+F3,C
@@ -1234,7 +1234,7 @@ key",Use a form,Run a query,Use a report,A
 236,"What is the maximum number of fields that can be included in an
 Access query?",100,255,512,1000,B
 237,Which key is used to navigate between records in Access?,F1,Tab,F11,Arrow Keys,D
-238,"In Access, a �form� is typically used to:","Input, modify,
+238,"In Access, a 'form' is typically used to:","Input, modify,
 and
 display data","Summarize
 data",Print data,"Store large
@@ -1373,7 +1373,7 @@ range> Home
 tabale > Type
 name",C
 262,How do you adjust column widths and row heights in Excel?,"Use the
-�Format�
+'Format'
 tab in the
 Home
 tab","Drag column
@@ -1384,13 +1384,13 @@ boundaries","Apply cell
 styles
 from the Cell
 Styles gallery","Use the
-�Merge &
-Center�
+'Merge &
+Center'
 option",A
 263,"Suppose you have separate sheets for each quarter, and you
 want to find the total revenue for the year. You can select a cell
 on a summary sheet and use a __________ to add the revenue
-from each quarter�s sheet.","Concatenate
+from each quarter's sheet.","Concatenate
 function","Consolidate
 function",Copy & Paste,SUM function,D
 264,"Excel provides a powerful built-in tool called ____________ for
@@ -1415,24 +1415,24 @@ conditions only","combine
 multiple
 conditions",Only A,Both A & B,B
 269,"Which syntax is correct to express - If the value in cell B2 is
-greater than 100, the formula returns �Above Target�; otherwise,
-it returns �Below Target.�","=IF(B2>100,
-�Above
-Target�,
-�Below
-Target�)","=IF(B2<100,
-�Above
-Target�,
-�Below
-Target�)","=IF(B2>=100,
-�Above
-Target�,
-�Below
-Target�)","=IF(B2>100,
-�Below
-Target�,
-�Above
-Target�)",A
+greater than 100, the formula returns 'Above Target'; otherwise,
+it returns 'Below Target.'","=IF(B2>100,
+'Above
+Target',
+'Below
+Target')","=IF(B2<100,
+'Above
+Target',
+'Below
+Target')","=IF(B2>=100,
+'Above
+Target',
+'Below
+Target')","=IF(B2>100,
+'Below
+Target',
+'Above
+Target')",A
 270,The function extracts characters from the beginning of a text.,=LEN(),=RIGHT(),=LEFT(),=TEXT(),C
 271,"____________ calculates the end of the month based on a given
 date.","EOMONTH
@@ -1445,7 +1445,7 @@ cells B2 and C2.","=DATE(B2,C2
 ,""D""
 )","=DATEDIF(B
 2,
-C2, �D�)","=DIFF(B2,C2,""
+C2, 'D')","=DIFF(B2,C2,""
 D
 "")","=DIFFDATE(
 B2,C2,""D"")",B
@@ -1476,7 +1476,7 @@ col_index_nu
 m,
 [range_looku
 p])",D
-275,"When consolidating data in Excel, what does the �table_array�
+275,"When consolidating data in Excel, what does the 'table_array'
 refer to?","The range of
 cells
 containing the
@@ -1517,13 +1517,13 @@ one or more specified condition within a range?",=COUNTIFS(),=COUNTIF(),=SUMIF()
 281,"Suppose you have a sales dataset with product names (in
 Column A) and corresponding revenue (in Column B). You are
 requested to find the total
-revenue for �Product A�. Which function argument you would like
+revenue for 'Product A'. Which function argument you would like
 to use?","=SUMIF(B1:B
 100,
-�Product A�,
+'Product A',
 A1:A100)","=SUMIF(A1:A
 10
-0, �Product A�,
+0, 'Product A',
 B1:B100)","=SUMIF(A1:A
 10
 0, A1,
@@ -1602,7 +1602,7 @@ security?",A username,A password,A color code,A font style,B
 298,"In Excel, what is the significance of password protecting a
 workbook?","It allows you to
 change the
-workbook�s
+workbook's
 formatting.","It prevents
 anyone from
 viewing the
@@ -1896,7 +1896,7 @@ the Data
 Validation
 settings",A
 342,"When using Goal Seek in Excel, which value is typically set as
-the �Set Cell�?","The input value
+the 'Set Cell'?","The input value
 you want to
 find","The target
 value
@@ -1906,7 +1906,7 @@ value you want
 to calculate","The formula
 cell",D
 343,"As aid in decision-making for investment opportunities, we can
-use Excel�s","What-If
+use Excel's","What-If
 Analysis
 tools","financial
 functions","What-If
@@ -2284,15 +2284,15 @@ process",B
 enabled by
 default","By clicking on
 the
-�File� tab and
+'File' tab and
 selecting
-�Options�","By pressing the
+'Options'","By pressing the
 F12 key","By right-clicking on a
 cell and
 selecting
-�Developer
-Options�",B
-393,"In the formula =LEFT(A1, 5), what does �5� represent?","The position to
+'Developer
+Options'",B
+393,"In the formula =LEFT(A1, 5), what does '5' represent?","The position to
 start searching","The length of
 the
 text string","The position
@@ -2376,8 +2376,8 @@ Tab",D
 401,What is the first step in recording a macro?,"Assigning a
 shortcut key","Naming the
 macro","Clicking on
-�Record
-Macro�","Enabling the
+'Record
+Macro'","Enabling the
 Developer
 tab",C
 402,"Which type of macro is more suitable for complex and
@@ -2440,7 +2440,7 @@ Office 365)",D
 411,Default workbook name is _____________.,Excel1,Book1,Sheet1,File1,B
 412,"A ________ is a collection of one or more worksheets,
 equivalent to a file that you can save and open in Excel.",workbook,worksheet,cell,File,A
-413,"Suppose you�ve entered �January� in cell A1 to represent the first
+413,"Suppose you've entered 'January' in cell A1 to represent the first
 month. Now, youcan quickly extend the series to cover the entire
 year, saving you the time and effort of manually typing out each
 month. What you will do?",Fill > Series,AutoFill,Flash Fill,Vlookup(),B
@@ -2813,9 +2813,9 @@ matches","It specifies
 the column
 number/row
 number",B
-470,"In the formula =INDEX(A1:D100, MATCH(�Product B�, A1:A100,
-0), MATCH(�Q2�, A1:D1, 0)),
-what does �Product B� represent?","The lookup
+470,"In the formula =INDEX(A1:D100, MATCH('Product B', A1:A100,
+0), MATCH('Q2', A1:D1, 0)),
+what does 'Product B' represent?","The lookup
 value
 in the vertical
 column.","The lookup
@@ -2879,7 +2879,7 @@ values
 between
 10,000 and
 20,000.",B
-475,"In the context of key-value extraction, what does the term �key�
+475,"In the context of key-value extraction, what does the term "key"
 refer to?","A new index
 created on one
 or
