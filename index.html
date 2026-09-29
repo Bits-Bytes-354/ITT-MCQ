@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MCQ Test App</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- PapaParse for CSV parsing -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-slate-100 min-h-screen text-slate-800 flex flex-col items-center py-6 px-4 font-sans">
+
+  <div class="w-full max-w-2xl">
+    
+    <!-- Top Bar -->
+    <header class="mb-5 flex justify-between items-center bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+      <div>
+        <h1 class="text-xl font-bold text-slate-800 flex items-center gap-2">
+          <i class="fa-solid fa-graduation-cap text-indigo-600"></i> MCQ Quiz Practice
+        </h1>
+        <p id="source-badge" class="text-xs text-slate-400 mt-1">Connecting to questions.csv...</p>
+      </div>
+      <div class="text-right">
+        <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Score</span>
+        <div class="text-lg font-bold text-indigo-600" id="score-counter">0 / 0</div>
+      </div>
+    </header>
+
+    <!-- Quiz Card -->
+    <main class="bg-white rounded-2xl shadow-md border border-slate-200 overflow-hidden">
+      
+      <!-- Card Sub-header -->
+      <div class="bg-slate-50 border-b border-slate-100 px-6 py-3 flex justify-between items-center text-xs font-semibold text-slate-500">
+        <span id="question-id-badge">Question #--</span>
+        <span class="bg-indigo-50 text-indigo-700 px-2 py-1 rounded">Random Selection</span>
+      </div>
+
+      <!-- Question and Options Area -->
+      <div class="p-6">
+        <h2 id="question-text" class="text-lg md:text-xl font-semibold text-slate-900 leading-relaxed mb-6">
+          Loading question...
+        </h2>
+
+        <!-- Options Container -->
+        <div id="options-container" class="space-y-3">
+          <!-- Dynamically populated -->
+        </div>
+
+        <!-- Result / Feedback Banner -->
+        <div id="feedback-banner" class="hidden mt-6 p-4 rounded-xl text-sm font-medium flex items-center gap-3">
+          <!-- Populated upon reveal -->
+        </div>
+      </div>
+
+      <!-- Bottom Actions -->
+      <div class="bg-slate-50 border-t border-slate-200 px-6 py-4 flex flex-wrap gap-3 justify-end items-center">
+        <!-- Show Answer Button -->
+        <button id="btn-show-answer" 
+          onclick="handleShowAnswer()" 
+          disabled
+          class="w-full sm:w-auto px-6 py-2.5 rounded-xl font-semibold text-white bg-indigo-600 hover:bg-indigo-700 disabled:opacity-40 disabled:cursor-not-allowed transition flex items-center justify-center gap-2 shadow-sm">
+          <span>Show Answer</span>
+          <i class="fa-solid fa-eye text-sm"></i>
+        </button>
+
+        <!-- Retest Button (Shown after answer is revealed) -->
+        <button id="btn-retest" 
+          onclick="handleRetest()" 
+          class="hidden w-full sm:w-auto px-5 py-2.5 rounded-xl font-semibold text-amber-700 bg-amber-100 hover:bg-amber-200 border border-amber-300 transition flex items-center justify-center gap-2">
+          <i class="fa-solid fa-rotate text-sm"></i>
+          <span>Re-test this question</span>
+        </button>
+
+        <!-- Next Question Button (Shown after answer is revealed) -->
+        <button id="btn-next" 
+          onclick="handleNextQuestion()" 
+          class="hidden w-full sm:w-auto px-6 py-2.5 rounded-xl font-semibold text-white bg-emerald-600 hover:bg-emerald-700 transition flex items-center justify-center gap-2 shadow-sm">
+          <span>Next Question</span>
+          <i class="fa-solid fa-arrow-right text-sm"></i>
+        </button>
+      </div>
+
+    </main>
+
+    <!-- Shortcut Hint -->
+    <div class="mt-4 text-center text-xs text-slate-400">
+      <span class="inline-block mx-1 font-mono bg-slate-200 px-1.5 py-0.5 rounded text-slate-600">1-4</span> Select &nbsp;|&nbsp;
+      <span class="inline-block mx-1 font-mono bg-slate-200 px-1.5 py-0.5 rounded text-slate-600">Enter</span> Submit/Next &nbsp;|&nbsp;
+      <span class="inline-block mx-1 font-mono bg-slate-200 px-1.5 py-0.5 rounded text-slate-600">R</span> Retest
+    </div>
+
+  </div>
+
+  <script>
+    // Path to the CSV file inside your repository
+    const CSV_PATH = "./questions.csv";
+
+    let questionsPool = [];
+    let currentQuestion = null;
+    let shuffledOptions = [];
+    let selectedOptionIndex = null;
+    let isAnswerRevealed = false;
+    let stats = { correct: 0, total: 0 };
+
+    window.addEventListener('DOMContentLoaded', () => {
+      loadCSV();
+      setupKeyboard();
+    });
+
+    async function loadCSV() {
+      const badge = document.getElementById('source-badge');
+      try {
+        const response = await fetch(CSV_PATH);
+        if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);
+        const csvText = await response.text();
+
+        Papa.parse(csvText, {
+          header: true,
+          skipEmptyLines: true,
+          complete: function(results) {
+            questionsPool = results.data
+              .filter(q => q.Question && q.Answer)
+              .map(row => ({
+                sno: row['S.No'] || '',
+                question: row['Question'].trim(),
+                rawOptions: {
+                  A: row['OptionA'] ? row['OptionA'].trim() : '',
+                  B: row['OptionB'] ? row['OptionB'].trim() : '',
+                  C: row['OptionC'] ? row['OptionC'].trim() : '',
+                  D: row['OptionD'] ? row['OptionD'].trim() : '',
+                },
+                correctAnswerKey: (row['Answer'] || '').trim().toUpperCase()
+              }));
+
+            if (questionsPool.length > 0) {
+              badge.textContent = `Loaded ${questionsPool.length} questions`;
+              badge.classList.replace('text-slate-400', 'text-emerald-600');
+              loadRandomQuestion();
+            } else {
+              badge.textContent = "CSV file is empty or formatted incorrectly.";
+              badge.classList.replace('text-slate-400', 'text-rose-600');
+            }
+          }
+        });
+      } catch (err) {
+        console.error("Error loading CSV:", err);
+        badge.innerHTML = `<span class="text-rose-500 font-medium">Failed to load ${CSV_PATH}. Ensure the file exists.</span>`;
+        document.getElementById('question-text').textContent = "Failed to load questions. If testing locally, please run through a web server (e.g. VS Code Live Server) or view via GitHub Pages.";
+      }
+    }
+
+    // Fisher-Yates array shuffle
+    function shuffleArray(array) {
+      const arr = [...array];
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    function loadRandomQuestion() {
+      if (questionsPool.length === 0) return;
+      const randomIndex = Math.floor(Math.random() * questionsPool.length);
+      currentQuestion = questionsPool[randomIndex];
+      renderQuestion();
+    }
+
+    function renderQuestion() {
+      isAnswerRevealed = false;
+      selectedOptionIndex = null;
+
+      // Prepare options and assign which one is correct based on original key
+      const opts = [
+        { key: 'A', text: currentQuestion.rawOptions.A, isCorrect: currentQuestion.correctAnswerKey === 'A' },
+        { key: 'B', text: currentQuestion.rawOptions.B, isCorrect: currentQuestion.correctAnswerKey === 'B' },
+        { key: 'C', text: currentQuestion.rawOptions.C, isCorrect: currentQuestion.correctAnswerKey === 'C' },
+        { key: 'D', text: currentQuestion.rawOptions.D, isCorrect: currentQuestion.correctAnswerKey === 'D' },
+      ].filter(o => o.text);
+
+      // Shuffle options every time
+      shuffledOptions = shuffleArray(opts);
+
+      // Render Question details
+      document.getElementById('question-id-badge').textContent = `Question #${currentQuestion.sno || '?'}`;
+      document.getElementById('question-text').textContent = currentQuestion.question;
+
+      // Reset feedback banner
+      const feedback = document.getElementById('feedback-banner');
+      feedback.className = "hidden mt-6 p-4 rounded-xl text-sm font-medium flex items-center gap-3";
+      feedback.innerHTML = "";
+
+      // Reset buttons
+      document.getElementById('btn-show-answer').classList.remove('hidden');
+      document.getElementById('btn-show-answer').disabled = true;
+      document.getElementById('btn-next').classList.add('hidden');
+      document.getElementById('btn-retest').classList.add('hidden');
+
+      // Render Options
+      const container = document.getElementById('options-container');
+      container.innerHTML = '';
+
+      shuffledOptions.forEach((opt, idx) => {
+        const btn = document.createElement('button');
+        btn.id = `option-btn-${idx}`;
+        btn.className = `w-full text-left p-4 rounded-xl border border-slate-200 hover:border-indigo-300 hover:bg-slate-50 transition flex items-center justify-between group cursor-pointer`;
+        btn.onclick = () => selectOption(idx);
+
+        btn.innerHTML = `
+          <div class="flex items-center gap-3">
+            <span class="w-8 h-8 rounded-lg bg-slate-100 text-slate-600 flex items-center justify-center font-bold text-xs group-hover:bg-indigo-100 group-hover:text-indigo-700 transition">
+              ${String.fromCharCode(65 + idx)}
+            </span>
+            <span class="text-sm md:text-base font-normal text-slate-700">${escapeHtml(opt.text)}</span>
+          </div>
+          <div class="icon-indicator text-slate-300">
+            <i class="fa-regular fa-circle"></i>
+          </div>
+        `;
+        container.appendChild(btn);
+      });
+    }
+
+    function selectOption(index) {
+      if (isAnswerRevealed) return;
+      selectedOptionIndex = index;
+
+      shuffledOptions.forEach((_, idx) => {
+        const btn = document.getElementById(`option-btn-${idx}`);
+        const indicator = btn.querySelector('.icon-indicator');
+        
+        if (idx === index) {
+          btn.className = `w-full text-left p-4 rounded-xl border-2 border-indigo-600 bg-indigo-50/50 transition flex items-center justify-between cursor-pointer`;
+          indicator.innerHTML = `<i class="fa-solid fa-circle-dot text-indigo-600 text-lg"></i>`;
+        } else {
+          btn.className = `w-full text-left p-4 rounded-xl border border-slate-200 hover:border-indigo-300 hover:bg-slate-50 transition flex items-center justify-between group cursor-pointer`;
+          indicator.innerHTML = `<i class="fa-regular fa-circle text-slate-300"></i>`;
+        }
+      });
+
+      document.getElementById('btn-show-answer').disabled = false;
+    }
+
+    function handleShowAnswer() {
+      if (selectedOptionIndex === null || isAnswerRevealed) return;
+      isAnswerRevealed = true;
+
+      const chosenOption = shuffledOptions[selectedOptionIndex];
+      const isCorrect = chosenOption.isCorrect;
+
+      stats.total++;
+      if (isCorrect) stats.correct++;
+      document.getElementById('score-counter').textContent = `${stats.correct} / ${stats.total}`;
+
+      // Highlight options
+      shuffledOptions.forEach((opt, idx) => {
+        const btn = document.getElementById(`option-btn-${idx}`);
+        const indicator = btn.querySelector('.icon-indicator');
+        btn.classList.remove('cursor-pointer', 'hover:border-indigo-300', 'hover:bg-slate-50');
+        btn.classList.add('cursor-default');
+
+        if (opt.isCorrect) {
+          // Highlight correct answer in Green
+          btn.className = `w-full text-left p-4 rounded-xl border-2 border-emerald-500 bg-emerald-50 text-emerald-900 transition flex items-center justify-between`;
+          indicator.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-600 text-xl"></i>`;
+        } else if (idx === selectedOptionIndex && !isCorrect) {
+          // Highlight wrong user selection in Red
+          btn.className = `w-full text-left p-4 rounded-xl border-2 border-rose-500 bg-rose-50 text-rose-900 transition flex items-center justify-between`;
+          indicator.innerHTML = `<i class="fa-solid fa-circle-xmark text-rose-600 text-xl"></i>`;
+        } else {
+          btn.className = `w-full text-left p-4 rounded-xl border border-slate-200 opacity-50 transition flex items-center justify-between`;
+        }
+      });
+
+      // Feedback Banner
+      const banner = document.getElementById('feedback-banner');
+      banner.classList.remove('hidden');
+      if (isCorrect) {
+        banner.className = "mt-6 p-4 rounded-xl text-sm font-medium flex items-center gap-3 bg-emerald-100 text-emerald-800 border border-emerald-200";
+        banner.innerHTML = `<i class="fa-solid fa-thumbs-up text-lg"></i> <span><strong>Correct!</strong> Great job.</span>`;
+      } else {
+        banner.className = "mt-6 p-4 rounded-xl text-sm font-medium flex items-center gap-3 bg-rose-100 text-rose-800 border border-rose-200";
+        banner.innerHTML = `<i class="fa-solid fa-circle-xmark text-lg"></i> <span><strong>Incorrect!</strong> The correct answer is highlighted in green.</span>`;
+      }
+
+      // Switch Buttons
+      document.getElementById('btn-show-answer').classList.add('hidden');
+      document.getElementById('btn-next').classList.remove('hidden');
+      document.getElementById('btn-retest').classList.remove('hidden');
+    }
+
+    // Retest: Keep current question, reshuffle options, reset state
+    function handleRetest() {
+      renderQuestion();
+    }
+
+    // Next question: Pick another random question from pool
+    function handleNextQuestion() {
+      loadRandomQuestion();
+    }
+
+    function setupKeyboard() {
+      document.addEventListener('keydown', (e) => {
+        if (e.key >= '1' && e.key <= '4') {
+          const idx = parseInt(e.key) - 1;
+          if (idx < shuffledOptions.length) selectOption(idx);
+        } else if (e.key === 'Enter') {
+          if (!isAnswerRevealed && selectedOptionIndex !== null) {
+            handleShowAnswer();
+          } else if (isAnswerRevealed) {
+            handleNextQuestion();
+          }
+        } else if (e.key.toLowerCase() === 'r') {
+          if (isAnswerRevealed) handleRetest();
+        }
+      });
+    }
+
+    function escapeHtml(text) {
+      if (!text) return '';
+      return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+    }
+  </script>
+</body>
+</html>
